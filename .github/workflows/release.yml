@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: macos-14, target: mac-arm64 }
+          - { os: macos-latest, target: mac-arm64 }
           - { os: macos-15-intel, target: mac-x64 }
           - { os: windows-latest, target: win-x64 }
           - { os: ubuntu-22.04, target: linux-x64 }
@@ -84,6 +84,22 @@ jobs:
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             pyinstaller "${ARGS[@]}" --onefile --name "$APP-portable" packaging/launcher.py
           fi
+
+      - name: Smoke test (start the bundled app, check it serves its page)
+        env:
+          APP_SMOKE: "1"
+        run: |
+          case "$RUNNER_OS" in
+            macOS) BIN="dist/$APP.app/Contents/MacOS/$APP" ;;
+            Windows) BIN="dist/$APP/$APP.exe" ;;
+            *) BIN="dist/$APP/$APP" ;;
+          esac
+          python - "$BIN" <<'EOF'
+          import subprocess, sys
+          r = subprocess.run([sys.argv[1]], capture_output=True, text=True, timeout=180)
+          print(r.stdout[-3000:], r.stderr[-3000:])
+          sys.exit(r.returncode)
+          EOF
 
       - name: macOS .dmg
         if: runner.os == 'macOS'
@@ -150,6 +166,7 @@ jobs:
 
   flatpak:
     needs: build
+    if: always() && needs.build.result != 'cancelled'   # only needs the Linux build, not every platform
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08

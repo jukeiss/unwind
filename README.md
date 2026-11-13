@@ -6,7 +6,21 @@ Python standard library + plain JS, no build step, no accounts. Runs entirely on
 
 Works on macOS (full binary analysis uses Xcode's command-line tools: `xcode-select --install`). Chain tracing, forensics, malware triage of scripts and Windows/Linux files, the vault and the AI assistant also work on Linux.
 
-## Quick start
+## Download
+
+Get the installer for your computer from the [latest release](https://github.com/jukeiss/unwind/releases/latest):
+
+| Your computer | Download |
+|---|---|
+| Mac (Apple Silicon or Intel) | `.dmg` → drag Unwind to Applications |
+| Windows | `Setup-x64.exe` (installer) or `portable-x64.exe` (no install) |
+| Ubuntu / Debian | `.deb` → `sudo apt install ./Unwind-*.deb` |
+| Fedora / openSUSE | `.rpm` → `sudo dnf install ./Unwind-*.rpm` |
+| Any Linux | `.AppImage` (make it executable, run it) or `.flatpak` (`flatpak install --user Unwind-*.flatpak`) |
+
+The builds aren't code-signed yet: on macOS right-click the app → **Open** the first time; on Windows click **More info** → **Run anyway**. Installed apps keep your notes in `~/Unwind Vault`.
+
+## Run from source
 
 ```bash
 git clone https://github.com/jukeiss/unwind.git

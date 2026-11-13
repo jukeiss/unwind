@@ -9,6 +9,7 @@ import os
 import sys
 import threading
 import time
+import urllib.request
 import webbrowser
 
 if getattr(sys, "frozen", False):
@@ -40,6 +41,14 @@ def main():
             break
         except Exception:
             time.sleep(0.1)
+    if os.environ.get("APP_SMOKE"):          # CI: prove the bundled app starts and serves its page, then exit
+        try:
+            ok = urllib.request.urlopen(url, timeout=10).status == 200
+        except Exception as e:
+            print("smoke test failed:", e, flush=True)
+            ok = False
+        print("smoke test:", "OK" if ok else "FAILED", url, flush=True)
+        os._exit(0 if ok else 1)
     webbrowser.open(url)
     try:
         control_window(url)
