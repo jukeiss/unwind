@@ -1,0 +1,25 @@
+# Flatpak manifest. The release workflow drops the Linux build into ./src before building.
+app-id: io.github.jukeiss.Unwind
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: unwind
+rename-desktop-file: unwind.desktop
+rename-icon: unwind
+finish-args:
+  - --share=network        # chain explorers, AI providers (only the ones you use)
+  - --share=ipc
+  - --socket=x11           # the small control window
+  - --filesystem=home      # analyse files you choose, keep the vault in ~/Unwind Vault
+modules:
+  - name: unwind
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/lib /app/bin
+      - cp -a Unwind /app/lib/unwind
+      - ln -s /app/lib/unwind/Unwind /app/bin/unwind
+      - install -Dm644 icon-512.png /app/share/icons/hicolor/512x512/apps/unwind.png
+      - install -Dm644 unwind.desktop /app/share/applications/unwind.desktop
+    sources:
+      - type: dir
+        path: src

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Unwind
+GenericName=Crypto tracing and reverse engineering
+Comment=Follow money across blockchains and take programs apart
+Exec=unwind
+Icon=unwind
+Terminal=false
+Categories=Development;Security;Utility;
+Keywords=crypto;blockchain;bitcoin;ethereum;reverse engineering;malware;disassembler;
+StartupNotify=true

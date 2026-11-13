@@ -78,12 +78,15 @@ def _save_wallet(address, chain="auto", with_exposure=True, with_links=True):
 
 def _info():
     py = sys.executable or "python3"
-    mcp = os.path.join(HERE, "unwind_mcp.py")
+    if getattr(sys, "frozen", False):          # installed app: the app binary itself serves MCP
+        cmd, args = py, ["--mcp"]
+    else:
+        cmd, args = py, [os.path.join(HERE, "unwind_mcp.py")]
     return {
         "version": VERSION, "app_dir": HERE, "vault": vault._root(), "python": py,
-        "mcp_server": mcp,
-        "claude_code_command": f'claude mcp add unwind -- "{py}" "{mcp}"',
-        "mcp_json": {"mcpServers": {"unwind": {"command": py, "args": [mcp]}}},
+        "mcp_server": args[-1],
+        "claude_code_command": f'claude mcp add unwind -- "{cmd}" ' + " ".join(f'"{a}"' if " " in a else a for a in args),
+        "mcp_json": {"mcpServers": {"unwind": {"command": cmd, "args": args}}},
         "chains": len(chaintrace.REG),
         "settings": chaintrace.API["settings"](),
     }
