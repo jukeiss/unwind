@@ -1,0 +1,17 @@
+#!/bin/sh
+# Start Unwind: ./unwind  (add --no-open or --port 9000 if you like)
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "Unwind needs Python 3.9 or newer. Install it from https://www.python.org/downloads/ and try again."
+  exit 1
+fi
+
+# One-time: install the Claude SDK next to the app (not system-wide). Everything else is standard library.
+if [ ! -d "$DIR/.deps/anthropic" ] && [ -z "$UNWIND_SKIP_DEPS" ]; then
+  echo "First run: installing the Claude SDK into $DIR/.deps (one time, ~50 MB)…"
+  python3 -m pip install --quiet --disable-pip-version-check --target "$DIR/.deps" -r "$DIR/requirements.txt" \
+    || echo "Couldn't install it. Unwind still works; only Claude in the AI assistant needs it."
+fi
+
+exec python3 "$DIR/app.py" "$@"

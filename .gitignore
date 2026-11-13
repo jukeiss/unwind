@@ -1,0 +1,20 @@
+# Your data: notes, cases, reports. Never published.
+vault/
+
+# Keys and exports
+*.env
+.env*
+unwind-keys*
+settings.json
+connectors.json
+
+# Installed dependencies (the launcher installs them)
+.deps/
+
+# Python / OS / editor noise
+__pycache__/
+*.pyc
+.DS_Store
+.claude/
+.vscode/
+.idea/

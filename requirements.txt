@@ -1,0 +1,3 @@
+# Optional: only needed to use Claude in the AI assistant.
+# The ./unwind launcher installs this into ./.deps on first run.
+anthropic>=2.8
